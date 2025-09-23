@@ -16,6 +16,13 @@ cat > "$PLIST_PATH" << EOL
         <string>/bin/bash</string>
         <string>$SCRIPT_PATH</string>
     </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
@@ -23,10 +30,15 @@ cat > "$PLIST_PATH" << EOL
         <key>Minute</key>
         <integer>0</integer>
     </dict>
+    <key>StandardOutPath</key>
+    <string>/tmp/com.user.autoupdate.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/com.user.autoupdate.err</string>
 </dict>
 </plist>
 EOL
 
+launchctl unload "$PLIST_PATH" &> /dev/null || true
 launchctl load "$PLIST_PATH"
 
 echo "Installation complete."
