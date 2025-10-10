@@ -4,7 +4,7 @@
 
 This project contains a set of shell scripts designed to automate the process of keeping macOS packages up-to-date. It consists of two main scripts:
 
-*   `src/scripts/update.sh`: This script updates Homebrew and global npm packages. It logs its operations to `~/macOSPackagesAutoUpdate.log`.
+*   `src/scripts/update.sh`: This script updates Homebrew, global npm packages, and chezmoi dotfiles. It logs its operations to `~/macOSPackagesAutoUpdate.log`.
 *   `src/scripts/install.sh`: This script installs the `update.sh` script as a background service using `launchd`. It creates a `.plist` file in `~/Library/LaunchAgents/` and loads it with `launchctl`. The service is configured to run daily at 2 PM and also every time the user logs in. It logs standard output and errors to `/tmp/com.user.autoupdate.out` and `/tmp/com.user.autoupdate.err`, respectively.
 
 The project uses `bats` for unit testing, with mock versions of `brew`, `npm`, and `launchctl` to ensure the scripts behave as expected without affecting the live system.
