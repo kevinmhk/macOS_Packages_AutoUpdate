@@ -36,4 +36,15 @@ else
   log "npm not found, skipping."
 fi
 
+if command -v chezmoi &> /dev/null; then
+  log "Updating chezmoi-managed dotfiles..."
+  if chezmoi update >> "$LOG_FILE" 2>&1; then
+    log "chezmoi update complete."
+  else
+    log "chezmoi update encountered an error."
+  fi
+else
+  log "chezmoi not found, skipping."
+fi
+
 log "All package updates complete."
