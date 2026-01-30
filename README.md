@@ -1,6 +1,6 @@
 # macOS Packages AutoUpdate
 
-This project provides a set of shell scripts to automate the process of keeping macOS packages up-to-date. It handles Homebrew, global npm packages, and chezmoi-managed dotfiles (when chezmoi is installed).
+This project provides a set of shell scripts to automate the process of keeping macOS packages up-to-date. It handles Homebrew, global npm packages, uv-managed tools, and chezmoi-managed dotfiles (when chezmoi is installed).
 
 ## Installation
 
@@ -18,6 +18,7 @@ Although the script is designed to run automatically after installation, you can
 ./src/scripts/update.sh
 ```
 
+If `uv` is available on your system, the update script will run `uv tool upgrade --all` to keep installed tools up to date.
 If `chezmoi` is available on your system, the update script will also execute `chezmoi update` so your dotfiles stay in sync alongside package updates.
 
 ## Logging
