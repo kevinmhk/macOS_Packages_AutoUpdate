@@ -36,6 +36,17 @@ else
   log "npm not found, skipping."
 fi
 
+if command -v uv &> /dev/null; then
+  log "Upgrading uv tools..."
+  if uv tool upgrade --all >> "$LOG_FILE" 2>&1; then
+    log "uv tool upgrade complete."
+  else
+    log "uv tool upgrade encountered an error."
+  fi
+else
+  log "uv not found, skipping."
+fi
+
 if command -v chezmoi &> /dev/null; then
   log "Updating chezmoi-managed dotfiles..."
   if chezmoi update >> "$LOG_FILE" 2>&1; then
