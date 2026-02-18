@@ -25,12 +25,24 @@ fi
 
 if command -v npm &> /dev/null; then
   log "Checking for outdated global npm packages..."
-  if [ -z "$(npm outdated -g)" ]; then
+  npm_outdated_output="$(npm outdated -g 2>&1)"
+  npm_outdated_status=$?
+
+  if [ "$npm_outdated_status" -eq 0 ]; then
     log "No outdated global npm packages to update."
-  else
+  elif [ "$npm_outdated_status" -eq 1 ]; then
     log "Outdated global npm packages found. Updating..."
-    npm update -g >> "$LOG_FILE" 2>&1
-    log "npm update complete."
+    log "npm outdated output:"
+    printf "%s\n" "$npm_outdated_output" >> "$LOG_FILE"
+    if npm update -g >> "$LOG_FILE" 2>&1; then
+      log "npm update complete."
+    else
+      log "npm update encountered an error."
+    fi
+  else
+    log "npm outdated check failed (exit $npm_outdated_status)."
+    log "npm outdated output:"
+    printf "%s\n" "$npm_outdated_output" >> "$LOG_FILE"
   fi
 else
   log "npm not found, skipping."
