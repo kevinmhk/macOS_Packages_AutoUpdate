@@ -18,15 +18,21 @@ Although the script is designed to run automatically after installation, you can
 ./src/scripts/update.sh
 ```
 
+During scheduled runs, the script executes in a non-interactive `launchd` shell. To keep npm behavior consistent with your interactive shell, it attempts to load NVM from `$HOME/.nvm` and use your default Node version before running global npm checks and updates. If NVM is not available, it falls back to the `npm` found in `PATH`.
+
 If `uv` is available on your system, the update script will run `uv tool upgrade --all` to keep installed tools up to date.
 If `chezmoi` is available on your system, the update script will also execute `chezmoi update` so your dotfiles stay in sync alongside package updates.
 
 ## Logging
 
-Logs are stored in different locations depending on how the script is executed:
+The update script appends operational logs to:
 
-- **Automated Service**: When the script is run automatically by the system, standard output is logged to `/tmp/com.user.autoupdate.out` and any errors are logged to `/tmp/com.user.autoupdate.err`.
-- **Manual Execution**: When you run the script manually, logs are appended to `~/macOSPackagesAutoUpdate.log`.
+- `~/macOSPackagesAutoUpdate.log`
+
+When run as a LaunchAgent, `launchd` also captures process-level stdout/stderr to:
+
+- `/tmp/com.user.autoupdate.out`
+- `/tmp/com.user.autoupdate.err`
 
 ## License
 

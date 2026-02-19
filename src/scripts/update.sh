@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
 LOG_FILE=${LOG_FILE:-~/macOSPackagesAutoUpdate.log}
+NVM_DIR=${NVM_DIR:-"$HOME/.nvm"}
 
 log() {
   echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+load_nvm() {
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    # shellcheck source=/dev/null
+    . "$NVM_DIR/nvm.sh"
+    nvm use --silent default >> "$LOG_FILE" 2>&1 || nvm use --silent node >> "$LOG_FILE" 2>&1 || true
+    return 0
+  fi
+  return 1
 }
 
 log "Starting package updates..."
@@ -23,7 +34,15 @@ else
   log "Homebrew not found, skipping."
 fi
 
+if load_nvm; then
+  log "nvm loaded from $NVM_DIR."
+else
+  log "nvm not found at $NVM_DIR; using system PATH for npm."
+fi
+
 if command -v npm &> /dev/null; then
+  log "Using npm at: $(command -v npm)"
+  log "npm version: $(npm --version)"
   log "Checking for outdated global npm packages..."
   npm_outdated_output="$(npm outdated -g 2>&1)"
   npm_outdated_status=$?
